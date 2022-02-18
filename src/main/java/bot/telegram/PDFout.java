@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +23,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class PDFout {
-    static void savePDF(String json) throws FileNotFoundException, Docx4JException {
+    static void savePDF(String json, String path) throws FileNotFoundException, Docx4JException, MalformedURLException {
         List<String> name = chooseNames(json, "user_id");
         List<String> date = getValuesForGivenKey(json, "date");
         List<String> description = getValuesForGivenKey(json, "description");
         Collections.replaceAll(description,"", "не заполнил");
-        WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream("document.docx"));
+        WordprocessingMLPackage template = WordprocessingMLPackage.load(new FileInputStream(path));
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < name.size(); i++) {
             map.put("NAME" + i, name.get(i));

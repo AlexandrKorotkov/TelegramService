@@ -3,6 +3,7 @@ package bot.telegram;
 import bot.telegram.repo.TelegramRepo;
 import bot.telegram.repo.TelegramRepoImpl;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -55,41 +56,42 @@ public class SenderBot extends TelegramLongPollingBot {
     }
 
     public void sendAll(InputFile file) {
-
         for (Long l : oldChats) {
             try {
-                execute(SendPhoto.builder().chatId(l.toString()).photo(new InputFile(new File("resources/111.jpg"))).build());
-                execute(SendMessage.builder().chatId(l.toString()).text(file + " Старенький").build());
+                execute(SendDocument.builder().document(file).chatId(l.toString()).build());
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
         for (Map.Entry<Long, String> pair : newChats.entrySet()) {
             try {
-                execute(SendPhoto.builder().chatId(pair.getKey().toString()).photo(new InputFile(new File("resources/111.jpg"))).build());
-                execute(SendMessage.builder().chatId(pair.getKey().toString()).text(file + " новенький").build());
+                execute(SendDocument.builder().document(file).chatId(pair.getKey().toString()).build());
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
         synchronizeChats();
-
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         Long chatId = update.getMessage().getChatId();
+        String mes= update.getMessage().getText();
+        if ("/start".equals(update.getMessage().getText())) {
+            try {
+                execute(SendPhoto.builder().chatId(chatId.toString()).photo(new InputFile(new File("classpath:/111.jpg"))).build());
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
+        }
         if (!oldChats.contains(chatId)) {
             Long key = update.getMessage().getChatId();
             String value = update.getMessage().getFrom().getFirstName() + " "
                     + update.getMessage().getFrom().getLastName();
             newChats.put(key, value);
-            System.out.println("Добавили в newChats " + key + " " + value);
-            synchronizeChats();//проверить - будет писать что уже старый
         }
-        System.out.println(update.getMessage().getFrom().getFirstName() + " "
-                + update.getMessage().getFrom().getLastName() +
-                " chatId = " + update.getMessage().getChat().getId());
+        synchronizeChats();
+
 
     }
 }

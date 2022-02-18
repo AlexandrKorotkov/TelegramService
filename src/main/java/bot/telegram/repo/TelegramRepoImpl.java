@@ -21,11 +21,8 @@ public class TelegramRepoImpl implements TelegramRepo {
         hikariConfig.setDriverClassName("org.postgresql.Driver");
         hikariConfig.setJdbcUrl("jdbc:postgresql://34.116.245.1:5432/telegramdb");
         hikariConfig.setMaximumPoolSize(20);
-        System.out.println("sout Database connection inits success.");
         this.dataSource = new HikariDataSource(hikariConfig);
-        System.out.println("sout Database has been connected.");
-    }
-
+            }
 
     @Override
     public List<Long> getChatsFromDB() {
@@ -35,7 +32,6 @@ public class TelegramRepoImpl implements TelegramRepo {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     chatList.add(resultSet.getLong(1));
-                    System.out.println("Из базы взяли чат "+ resultSet.getLong(1));
                 }
             }
             return chatList;
@@ -56,7 +52,6 @@ public class TelegramRepoImpl implements TelegramRepo {
                     throw new SQLException("Can't update chatId in DB " + pair.getKey() + " " + pair.getValue());
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
