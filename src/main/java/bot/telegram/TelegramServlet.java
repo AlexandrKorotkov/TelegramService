@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,18 +31,18 @@ public class TelegramServlet extends HttpServlet {
         hikariConfig.setJdbcUrl("jdbc:postgresql://34.116.245.1:5432/telegramdb");
         hikariConfig.setMaximumPoolSize(20);
         this.dataSource = new HikariDataSource(hikariConfig);
-
         try {
-            this.bot = new SenderBot();
+            bot = new SenderBot();
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(bot);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String test = new String();
         if ("POST".equalsIgnoreCase(req.getMethod())) {
             test = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));

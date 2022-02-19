@@ -7,10 +7,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +24,7 @@ public class SenderBot extends TelegramLongPollingBot {
     private static Map<Long, String> newChats = new HashMap<>();//чаты, сохраненные с момента последенего запуска программы
     private TelegramRepo telegramRepo = new TelegramRepoImpl();
 
-    //обновление в бд
+    //обновление данных в бд
     public void synchronizeChats() {
         telegramRepo.addChatsToDB(newChats);
         moveNewsToOlds();
@@ -50,11 +53,14 @@ public class SenderBot extends TelegramLongPollingBot {
         return "5121355453:AAHz9S07uwS4D-djpGXdl1B22U9qpOv2lRs";
     }
 
+    //перемещение списка новых юзеров в список старых.
     private void moveNewsToOlds() {
         oldChats.addAll(newChats.keySet());
         newChats.clear();
     }
 
+    //сначала рассылка по старым, потом по новым. После рассылки происходит обновление чатов.
+    //Все новые при следующей рассылке будут уже в старых.
     public void sendAll(InputFile file) {
         for (Long l : oldChats) {
             try {
@@ -66,6 +72,7 @@ public class SenderBot extends TelegramLongPollingBot {
         for (Map.Entry<Long, String> pair : newChats.entrySet()) {
             try {
                 execute(SendDocument.builder().document(file).chatId(pair.getKey().toString()).build());
+
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
@@ -76,10 +83,11 @@ public class SenderBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Long chatId = update.getMessage().getChatId();
-        String mes= update.getMessage().getText();
         if ("/start".equals(update.getMessage().getText())) {
             try {
-                execute(SendPhoto.builder().chatId(chatId.toString()).photo(new InputFile(new File("classpath:/111.jpg"))).build());
+                execute(SendMessage.builder().chatId(chatId.toString()).text("Здарова").disableNotification(true).build());
+//                execute(SendPhoto.builder().chatId(chatId.toString()).photo(new InputFile(
+//                        new File("src/main/webapp/111.jpg"))).build());
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
@@ -90,8 +98,6 @@ public class SenderBot extends TelegramLongPollingBot {
                     + update.getMessage().getFrom().getLastName();
             newChats.put(key, value);
         }
-        synchronizeChats();
-
 
     }
 }
