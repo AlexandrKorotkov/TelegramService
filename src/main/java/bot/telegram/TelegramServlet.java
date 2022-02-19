@@ -38,20 +38,21 @@ public class TelegramServlet extends HttpServlet {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp){
         String test = new String();
-        if ("POST".equalsIgnoreCase(req.getMethod())) {
-            test = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-        }
-        try {
+            try {
+            if ("POST".equalsIgnoreCase(req.getMethod())) {
+                test = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+            }
             CreatePdf pdf = new CreatePdf();
             pdf.create("", test);
 
         } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         bot.sendAll(new InputFile(new File("document.pdf")));
