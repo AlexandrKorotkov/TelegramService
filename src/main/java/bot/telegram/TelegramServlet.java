@@ -42,20 +42,25 @@ public class TelegramServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp){
+        String path = req.getServletContext().getRealPath("/");
         String test = new String();
             try {
             if ("POST".equalsIgnoreCase(req.getMethod())) {
                 test = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             }
             CreatePdf pdf = new CreatePdf();
-            pdf.create("", test);
+            pdf.create(path, test);
 
         } catch (DocumentException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        bot.sendAll(new InputFile(new File("document.pdf")));
+        bot.sendAll(new InputFile(new File(path+"document.pdf")));
     }
 
+    @Override
+    public void destroy() {
+        dataSource.close();
+    }
 }
