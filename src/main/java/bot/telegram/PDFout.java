@@ -35,8 +35,7 @@ public class PDFout {
             map.put("ACTIVITY" + i, description.get(i));
         }
         Docx4JSRUtil.searchAndReplace(template, map);
-        Docx4JSRUtil.searchAndReplace(template, Map.of(
-                "DATE", date.get(0)
+        Docx4JSRUtil.searchAndReplace(template, Map.of("DATE", date.get(0)
         ));
         Docx4J.toPDF(template, new FileOutputStream("document.pdf"));
     }
