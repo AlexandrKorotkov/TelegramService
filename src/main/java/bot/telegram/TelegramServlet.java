@@ -29,7 +29,7 @@ public class TelegramServlet extends HttpServlet {
         hikariConfig.setPassword("strongpassword");
         hikariConfig.setDriverClassName("org.postgresql.Driver");
         hikariConfig.setJdbcUrl("jdbc:postgresql://34.116.245.1:5432/telegramdb");
-        hikariConfig.setMaximumPoolSize(20);
+        hikariConfig.setMaximumPoolSize(5);
         this.dataSource = new HikariDataSource(hikariConfig);
         try {
             bot = new SenderBot(dataSource);
