@@ -14,14 +14,8 @@ public class TelegramRepoImpl implements TelegramRepo {
     private static final String SQL_SAVE_CHAT = "insert into chats (id, full_name) values (?, ?)";
     private static final String SQL_FIND_ALL = "select id from chats";
 
-    public TelegramRepoImpl() {
-        HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setUsername("telegram");
-        hikariConfig.setPassword("strongpassword");
-        hikariConfig.setDriverClassName("org.postgresql.Driver");
-        hikariConfig.setJdbcUrl("jdbc:postgresql://34.116.245.1:5432/telegramdb");
-        hikariConfig.setMaximumPoolSize(20);
-        this.dataSource = new HikariDataSource(hikariConfig);
+    public TelegramRepoImpl(DataSource dataSource) {
+             this.dataSource = dataSource;
             }
 
     @Override

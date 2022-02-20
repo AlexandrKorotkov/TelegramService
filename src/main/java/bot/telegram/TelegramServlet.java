@@ -32,7 +32,7 @@ public class TelegramServlet extends HttpServlet {
         hikariConfig.setMaximumPoolSize(20);
         this.dataSource = new HikariDataSource(hikariConfig);
         try {
-            bot = new SenderBot();
+            bot = new SenderBot(dataSource);
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(bot);
         } catch (TelegramApiException e) {

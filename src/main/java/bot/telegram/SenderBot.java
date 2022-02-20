@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,7 +23,11 @@ import java.util.Map;
 public class SenderBot extends TelegramLongPollingBot {
     private static List<Long> oldChats = new ArrayList<>();//чаты, подтянутые из БД
     private static Map<Long, String> newChats = new HashMap<>();//чаты, сохраненные с момента последенего запуска программы
-    private TelegramRepo telegramRepo = new TelegramRepoImpl();
+    private TelegramRepo telegramRepo;
+
+    public SenderBot(DataSource dataSource) {
+        this.telegramRepo = new TelegramRepoImpl(dataSource);
+    }
 
     //обновление данных в бд
     public void synchronizeChats() {
