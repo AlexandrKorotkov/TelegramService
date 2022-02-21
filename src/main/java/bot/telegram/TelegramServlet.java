@@ -42,6 +42,11 @@ public class TelegramServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp){
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+        resp.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+        resp.addHeader("Access-Control-Max-Age", "1728000");
+
         String path = req.getServletContext().getRealPath("/");
         String test = new String();
             try {
@@ -62,5 +67,6 @@ public class TelegramServlet extends HttpServlet {
     @Override
     public void destroy() {
         dataSource.close();
+        bot.onClosing();
     }
 }
