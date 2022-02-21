@@ -37,8 +37,8 @@ public class SenderBot extends TelegramLongPollingBot {
 
     @Override
     public void onClosing() {
-        synchronizeChats();
         super.onClosing();
+        synchronizeChats();
     }
 
     @Override

@@ -1,10 +1,12 @@
 package bot.parser;
 
+
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -16,8 +18,11 @@ import java.util.stream.IntStream;
 
 public class CreatePdf {
     public void create(String path, String json) throws IOException, DocumentException {
-        List<String> names = chooseNames(json, "user_id");
+        List<String> names = getValuesForGivenKey(json, "fio");
         List<String> dates = getValuesForGivenKey(json, "date");
+        JSONObject jsonObject = new JSONObject(dates.get(0));
+        String month = jsonObject.getString("month");
+        int dayOfMonth = jsonObject.getInt("dayOfMonth");
         List<String> description = getValuesForGivenKey(json, "description");
         Collections.replaceAll(description,"", "did not fill in");
 
@@ -35,7 +40,7 @@ public class CreatePdf {
         head.setSpacingAfter(10);
         document.add(head);
         //REPORT
-        Paragraph date = new Paragraph("Report on " + dates.get(0), font);
+        Paragraph date = new Paragraph("Report on " + month + " " + dayOfMonth, font);
         date.setAlignment(Element.ALIGN_CENTER);
         date.setSpacingAfter(10);
         document.add(date);
@@ -50,29 +55,5 @@ public class CreatePdf {
         return IntStream.range(0, jsonArray.length())
                 .mapToObj(index -> ((JSONObject)jsonArray.get(index)).optString(key))
                 .collect(Collectors.toList());
-    }
-
-    private List<String> chooseNames(String json, String key){
-        List<String> names = getValuesForGivenKey(json, key);
-        UnaryOperator<String> replace = a -> {
-            switch (a){
-                case "1":
-                    return "Alexandr";
-                case "2":
-                    return "Oleg";
-                case "3":
-                    return "Eugenia";
-                case "4":
-                    return "Nikolai";
-                case "5":
-                    return "Sergey";
-                case "6":
-                    return "Damir";
-                default:
-                    return "unknown";
-            }
-        };
-        names.replaceAll(replace);
-        return names;
     }
 }
