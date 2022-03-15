@@ -65,13 +65,13 @@ public class SenderBot extends TelegramLongPollingBot {
     }
 
     //сначала рассылка по старым, потом по новым. После рассылки происходит обновление чатов.
-    //Все новые при следующей рассылке будут уже в старых.
+    //Все новые при следующей рассылке будут уже в старых списках.
     public void sendAll(InputFile file) {
         for (Long l : oldChats) {
             try {
                 execute(SendDocument.builder().document(file).chatId(l.toString()).build());
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                System.err.println("Can`t send the PDF to old chats");
             }
         }
         for (Map.Entry<Long, String> pair : newChats.entrySet()) {
@@ -79,7 +79,7 @@ public class SenderBot extends TelegramLongPollingBot {
                 execute(SendDocument.builder().document(file).chatId(pair.getKey().toString()).build());
 
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                System.err.println("Can`t send the PDF");
             }
         }
         synchronizeChats();
@@ -91,10 +91,9 @@ public class SenderBot extends TelegramLongPollingBot {
         if ("/start".equals(update.getMessage().getText())) {
             try {
                 execute(SendMessage.builder().chatId(chatId.toString()).text("Здарова").disableNotification(true).build());
-//                execute(SendPhoto.builder().chatId(chatId.toString()).photo(new InputFile(
-//                        new File("src/main/webapp/111.jpg"))).build());
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                System.err.println("Can`t reply on /start");
+
             }
         }
         if (!oldChats.contains(chatId)) {

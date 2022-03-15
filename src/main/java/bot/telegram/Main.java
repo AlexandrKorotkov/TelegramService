@@ -5,15 +5,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class Main {
-    public static void main(String[] args) {
-//        SenderBot senderBot = new SenderBot();
-//        try {
-//            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-//            botsApi.registerBot(senderBot);
-//
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
+    public static void main(String[] args){
+        int x=1;
+        System.out.println("x="+x);          // System.out.print
+        System.out.println(1+2+"text");
+        System.out.println("text"+1+2);
 
     }
+
+
+
 }
