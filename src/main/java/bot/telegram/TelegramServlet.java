@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +42,7 @@ public class TelegramServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp){
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
         resp.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
@@ -49,7 +50,7 @@ public class TelegramServlet extends HttpServlet {
 
         String path = req.getServletContext().getRealPath("/");
         String test = new String();
-            try {
+        try {
             if ("POST".equalsIgnoreCase(req.getMethod())) {
                 test = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
             }
@@ -61,7 +62,10 @@ public class TelegramServlet extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        bot.sendAll(new InputFile(new File(path+"document.pdf")));
+        bot.sendAll(new InputFile(new File(path + "document.pdf")));
+    }
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
     }
 
     @Override

@@ -91,6 +91,9 @@ public class SenderBot extends TelegramLongPollingBot {
         if ("/start".equals(update.getMessage().getText())) {
             try {
                 execute(SendMessage.builder().chatId(chatId.toString()).text("Здарова").disableNotification(true).build());
+                newChats.put(update.getMessage().getFrom().getId(), update.getMessage().getFrom().getFirstName() + " "
+                        + update.getMessage().getFrom().getLastName());
+
             } catch (TelegramApiException e) {
                 System.err.println("Can`t reply on /start");
 
@@ -102,6 +105,7 @@ public class SenderBot extends TelegramLongPollingBot {
                     + update.getMessage().getFrom().getLastName();
             newChats.put(key, value);
         }
+        synchronizeChats();
 
     }
 }
